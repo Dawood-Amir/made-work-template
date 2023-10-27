@@ -2,7 +2,7 @@
 
 ## Title
 <!-- Give your project a short title. -->
-MADE project.
+new MADE project.
 
 ## Main Question
 
