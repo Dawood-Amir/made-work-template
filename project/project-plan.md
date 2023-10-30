@@ -1,13 +1,12 @@
 # Project Plan
 
 ## Title
-<!-- Give your project a short title. -->
-new MADE project.
+How does CO2 effects our tempraure?.
 
 ## Main Question
 
 <!-- Think about one main question you want to answer based on the data. -->
-1. Does writing an example question help students write better project plans?
+1. How does CO2 effects our tempraure?
 
 ## Description
 
@@ -29,7 +28,10 @@ Short description of the DataSource.
 
 <!-- List of work packages ordered sequentially, each pointing to an issue with more details. -->
 
-1. Example Issue [#1][i1]
-2. ...
+1. Find a dataset encompassing global carbon dioxide emissions and temperature records compiled by all countries. [#1][i1]
+2. Perform data cleaning to address instances where no data is present. [#2][i2]
+3. Finding common Years in both datasets by countries. [#3][i3]
 
-[i1]: https://github.com/jvalue/made-template/issues/1
+[i1]: https://github.com/Dawood-Amir/made-work-template/issues/1#issue-1969017261
+[i2]: https://github.com/Dawood-Amir/made-work-template/issues/2#issue-1969021085
+[i3]: https://github.com/Dawood-Amir/made-work-template/issues/3#issue-1969026747
