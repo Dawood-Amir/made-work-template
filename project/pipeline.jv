@@ -1,0 +1,21 @@
+//Prolly need to change the data source, missing alot of data. 
+pipeline Co2Pipeline {
+ block DataExtractor oftype HttpExtractor { url: "https://query.data.world/s/43ofhgffvrdjkfx577ih5j6prp4rdr?dws=00000"; }
+ block Co2TextFileInterpreter oftype TextFileInterpreter {}
+ block Co2CSVInterpreter oftype CSVInterpreter { delimiter: ","; }
+ block Co2TableInterpreter oftype TableInterpreter {
+ header: true;
+ columns: [
+ "dt" oftype text,
+ "AverageTemperature" oftype decimal,
+ "AverageTemperatureUncertainty" oftype decimal,
+ "Country" oftype text,
+ ];
+ }
+ block DatabaseLoader oftype SQLiteLoader { table: "Temprature_Data"; file: "C:/Users/dawoo/OneDrive/Desktop/Exercise-Assignments/Software-Anwendungen mit KI-MADE/made-work-template/data/Temprature_Data.sqlite"; }
+ DataExtractor
+ ->Co2TextFileInterpreter
+ ->Co2CSVInterpreter
+ ->Co2TableInterpreter
+ ->DatabaseLoader;
+} 
