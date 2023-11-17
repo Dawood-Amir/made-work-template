@@ -52,7 +52,7 @@ For now i am planning to use 2 datasets Datasource1 "Global-CO2-Emissions" and D
 ### Datasource2: GLobal-Temprature
 <!-- Added matatdeta link for Co2 -->
 * Metadata URL: https://data.world/data-society/global-climate-change-data
-* Data URL: url.csv?
+* Data URL: https://query.data.world/s/43ofhgffvrdjkfx577ih5j6prp4rdr?dws=00000
 * Data Type: CSV
 
 Short description of the DataSource.
