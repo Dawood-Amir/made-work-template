@@ -46,7 +46,7 @@ For now i am planning to use 2 datasets Datasource1 "Global-CO2-Emissions" and D
 ### Datasource1: Global-CO2-Emissions
 <!-- Added matatdeta link for Co2 -->
 * Metadata URL: https://www.kaggle.com/datasets/mabdullahsajid/tracking-global-co2-emissions-1990-2023/
-* Data URL: url.csv?
+* Data URL: https://raw.githubusercontent.com/Dawood-Amir/Co2-Emission-Dataset/main/tidy_format_co2_emission_dataset.csv
 * Data Type: CSV
 
 ### Datasource2: GLobal-Temprature

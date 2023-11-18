@@ -10,7 +10,8 @@ class CsvDownloader:
                 self.data_url =  data_url
                 self.df = pd.read_csv(data_url, sep=",", on_bad_lines='skip')
                 return self.df 
-
+        
+        #Normal case just to save it without any modification might need it later for analysis  
         def save_file(self, fileNameWithPath)  :
                 if(self.df is not None ):
                         self.df.to_csv(fileNameWithPath)
@@ -20,5 +21,6 @@ class CsvDownloader:
                 if(dataframe is not None ):
                         dataframe.to_csv(fileNameWithPath)
                         print('File saved'+fileNameWithPath)
+
 
 
