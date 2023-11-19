@@ -14,12 +14,12 @@ class CsvDownloader:
         #Normal case just to save it without any modification might need it later for analysis  
         def save_file(self, fileNameWithPath)  :
                 if(self.df is not None ):
-                        self.df.to_csv(fileNameWithPath)
+                        self.df.to_csv(fileNameWithPath,index=False)
                         print('File saved'+fileNameWithPath)
 
         def save_file_with_modification(self, fileNameWithPath , dataframe)  :
                 if(dataframe is not None ):
-                        dataframe.to_csv(fileNameWithPath)
+                        dataframe.to_csv(fileNameWithPath,index=False)
                         print('File saved'+fileNameWithPath)
 
 

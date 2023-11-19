@@ -98,17 +98,19 @@ csv_dowloader.save_file_with_modification('./data/temprature_data_filtired_1951-
 
 
 
-
-
 #After just do the same for the C02 file first implement the func that authenticate from kagle
 #and download the csv file 
 
 csv_dowloader = CsvDownloader()
 #get the df from url
-df = csv_dowloader.download_data(const.URL_Temprature)  
+df = csv_dowloader.download_data(const.URL_C02_Emission)  
+#Clean the data here Drop the rows with null or  
+df.dropna(subset=['Country','Year','CO2EmissionRate (mt)'], inplace=True)
+df = df.drop('Unnamed: 0', axis=1)
 
 #save it as csv file
 csv_dowloader.save_file_with_modification('./data/tidy_format_co2_emission_dataset.csv', df)
+
 df = pd.read_csv('./data/tidy_format_co2_emission_dataset.csv')
 
 print(df)
