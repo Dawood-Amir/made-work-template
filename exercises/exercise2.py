@@ -38,10 +38,10 @@ sqlite_types = {
     "Laenge": types.FLOAT(),
     "Breite": types.FLOAT(),
     "Betreiber_Name": types.TEXT(),
-    "Betreiber_Nr": types.TEXT()
+    "Betreiber_Nr": types.INT()
 }
 #engine = create_engine("sqlite:///trainstops.sqlite")
-script_directory = os.path.dirname(os.path.abspath(__file__))
+script_directory = os.getcwd()
 db_file_path = os.path.join(script_directory, "trainstops.sqlite")
 engine = create_engine(f"sqlite:///{db_file_path}")# Write the DataFrame to the SQLite database
 
