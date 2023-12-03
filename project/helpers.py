@@ -23,8 +23,8 @@ def printMissingMonthsData(df):
                 monthCount =1
                 monthCount = pd.to_datetime(row['dt']).month
             else:
-                print("starting month count is not 1 or something else wrong here ")
-                print(row)
+                #print("starting month count is not 1 or something else wrong here ")
+                #print(row)
                 df2= pd.concat([df2, df], ignore_index=True)
                 #df2 = df2.append(row)
 

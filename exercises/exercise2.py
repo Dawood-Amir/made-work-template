@@ -46,7 +46,7 @@ db_file_path = os.path.join(script_directory, "trainstops.sqlite")
 engine = create_engine(f"sqlite:///{db_file_path}")# Write the DataFrame to the SQLite database
 
 df.to_sql("trainstops", engine, index=False, if_exists="replace", dtype=sqlite_types)
-
+ 
 
 
 #script_directory = os.path.dirname(os.path.abspath(__file__))
