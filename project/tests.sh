@@ -1,1 +1,1 @@
-pytest project/test_pipeline.py
+pytest ./project/test_pipeline.py
