@@ -18,11 +18,11 @@ class Pipeline:
 
     
 
-    def dowloadAndFilterData(self):
+    def dowloadAndFilterData(self,df):
         
         #df = pd.read_csv('./data/temprature.csv') # in case if dont wana download again just read the file ind data directory
 
-        df = self.downloadData(const.urls[0])
+        
 
         df['dt'] = pd.to_datetime(df['dt'])
 
@@ -38,35 +38,42 @@ class Pipeline:
         df = helpers.filterDataWithDateRange(df, "1950-12-01" , "2014-01-01")
         path = self._csv_dowloader.save_file_with_modification('./data/temprature_data_filtired_1951-2013.csv', dataframe=df)
         print(path)
+        
+        return df
+
 
 
     ###################################################################################################
 
     #2nd Dataset
 
-    def downloadAndFilter2ndData(self):
+    def downloadAndFilter2ndData(self, df):
 
-        df = self.downloadData(const.urls[1])
+        
         #Clean the data here 
 
         # Convert 'CO2EmissionRate (mt)' column to float type Conversion bcs of failing the test!
-        df['CO2EmissionRate (mt)'] = pd.topip_numeric(df['CO2EmissionRate (mt)'], errors='coerce').astype(float)
+        df['CO2EmissionRate (mt)'] = pd.to_numeric(df['CO2EmissionRate (mt)'], errors='coerce').astype(float)
 
 
         df.dropna(subset=['Country','Year','CO2EmissionRate (mt)'], inplace=True)
-        df = df.drop('Unnamed: 0', axis=1)
+
+        if 'Unnamed: 0' in df.columns:
+            df = df.drop('Unnamed: 0', axis=1)
 
         #save it as csv file
         path =  self._csv_dowloader.save_file_with_modification('./data/tidy_format_co2_emission_dataset.csv', df)
         print(path)
         df = pd.read_csv('./data/tidy_format_co2_emission_dataset.csv')
-
+        return df
         #print(df)
 
 
     def main(self):
-        self.dowloadAndFilterData()
-        self.downloadAndFilter2ndData()
+        df = self.downloadData(const.urls[0])
+        self.dowloadAndFilterData(df)
+        df2 = self.downloadData(const.urls[1])
+        self.downloadAndFilter2ndData(df2)
 
 
 if __name__ == '__main__':

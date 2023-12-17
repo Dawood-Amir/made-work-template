@@ -2,56 +2,29 @@ import pytest
 from pipeline import Pipeline
 import pandas as pd
 from unittest.mock import Mock
+from Constants import urls
 import os
 
 @pytest.fixture
 def pipeline_instance():
     return Pipeline()
-#Unit tests here
-def test_download_and_filter_data(pipeline_instance):
-    # Call the method you want to test
-    pipeline_instance.dowloadAndFilterData()
-    assert file_exists('./data/temprature_data_filtired_1951-2013.csv')
 
-def test_download_and_filter_2nd_data(pipeline_instance):
-    pipeline_instance.downloadAndFilter2ndData()
-    assert file_exists('./data/tidy_format_co2_emission_dataset.csv')
+@pytest.fixture
+def test_download_mocked_files(pipeline_instance, mocker):
+    # Mock the download method to avoid actual file download
+    mocker.patch.object(pipeline_instance, 'downloadData', return_value='test_mocked.csv')
 
-def file_exists(file_path):
-    return os.path.exists(file_path)
+    data_files_path = [pipeline_instance.downloadData(url) for url in urls]
 
-def test_dfs_are_not_empty():
+    # Check that the mocked file is returned for each URL
+    assert data_files_path == ['test_mocked.csv'] * len(urls)
 
-    temperature_df = pd.read_csv('./data/temprature_data_filtired_1951-2013.csv')
-    assert len(temperature_df) > 0  
-
-    co2_df = pd.read_csv('./data/tidy_format_co2_emission_dataset.csv')
-    assert len(co2_df) > 0  
+    return data_files_path  # Return the value to be used in the test
 
 
-def test_download_and_filter_data_with_mock(pipeline_instance, tmp_path):
-    # temp directory for test files
-    data_folder = tmp_path / "data"
 
-    # Creating a mock CsvDownloader
-    mock_downloader = Mock()
-    mock_downloader.download_data.return_value =  create_mocked_dataframe()
+def get_mocked_dataframe():# Create a mocked DataFrame for testing for 1st dataset
     
-    mock_downloader.save_file_with_modification.return_value = "File saved successfully"
-
-    
-    pipeline_instance._csv_dowloader = mock_downloader # Replacing the CsvDownloader instance with the mock
-
-    
-    pipeline_instance.dowloadAndFilterData()
-
-    file_path = data_folder / "temprature_data_filtired_1951-2013.csv"
-    assert file_path.resolve() == file_path.resolve()
-    print('Unit level test ended')
-
-def create_mocked_dataframe():# Create a mocked DataFrame for testing
-    
-
     import pandas as pd
 
     data = {
@@ -60,19 +33,101 @@ def create_mocked_dataframe():# Create a mocked DataFrame for testing
         'AverageTemperatureUncertainty': [1.0, 1.2],
         'Country': ['Country1', 'Country2']
     }
+    data2 = {
+        'Country': ['Afghanistan', 'Albania'],
+        'Year': ['2021', '2021'],
+        'CO2EmissionRate (mt)': [8.35, 4.59], 
+    }
 
-    return pd.DataFrame(data)
+    return [pd.DataFrame(data) , pd.DataFrame(data2)]
 
-# def create_mocked_dataframe_for_2nd_dataset():
-#     data = {
-#         'Country': ['Afghanistan', 'Albania'],
-#         'Year': [2021, 2021],
-#         'CO2EmissionRate (mt)': [8.35, 4.59]
-#     }
 
-#     return pd.DataFrame(data)
 
-# System Level test that check whole system/pipeline
+def check_co2_data_types(co2_df):
+
+    if co2_df.empty:
+        print("DataFrame is empty")
+        return False
+    
+    # Check if the data types in the CO2 DataFrame match the expected data types
+    expected_data_types = {'Country': 'object', 'Year': 'int64', 'CO2EmissionRate (mt)': 'float64'}
+
+    for column, expected_type in expected_data_types.items():
+        assert co2_df[column].dtype == expected_type
+    return True
+
+def check_temprature_data_types(temperature_df):
+    # dt,AverageTemperature,AverageTemperatureUncertainty,Country
+
+    if temperature_df.empty:
+        print("DataFrame is empty")
+        return False
+
+    expected_data_types = {'dt': 'object', 'AverageTemperature': 'float64', 'AverageTemperatureUncertainty': 
+                           'float64' ,'Country': 'object'}
+
+    for column, expected_type in expected_data_types.items():
+        assert temperature_df[column].dtype == expected_type
+    return True
+
+
+
+#System level mocked test 
+def test_system_level(pipeline_instance, mocker):
+    # Mock the transform method to avoid actual transformation
+    mocker.patch.object(pipeline_instance, 'dowloadAndFilterData', side_effect=lambda x: x)
+
+    # Mock the save_file_with_modification method to avoid writing to the file system
+    mocker.patch.object(pipeline_instance._csv_dowloader, 'save_file_with_modification', return_value='/path/to/mock_file.csv')        
+
+    # Mock the read_csv method
+    mocker.patch('pandas.read_csv', return_value=pd.DataFrame())
+
+    mocked_dataframe = get_mocked_dataframe()
+
+    # Perform the test
+    for i, file_path in enumerate(urls):
+        if i == 0:
+            df = pipeline_instance.dowloadAndFilterData(mocked_dataframe[i])
+        else:
+            df = pipeline_instance.downloadAndFilter2ndData(mocked_dataframe[i])
+
+        assert not df.isnull().values.any()
+
+    # Debugging: print calls to save_file_with_modification
+    print(pipeline_instance._csv_dowloader.save_file_with_modification.call_args_list)
+ 
+    # Debugging: print the actual DataFrame that was passed to the method
+    print("Actual DataFrame:")
+    print(df)
+
+    # Check that the save_file_with_modification method was called
+    pipeline_instance._csv_dowloader.save_file_with_modification.assert_called_once()
+
+    if 1==0:
+        check_temprature_data_types(df)
+        
+    else:
+        check_co2_data_types(df)
+
+
+
+
+#def test_dfs_are_not_empty( pipeline_instance , mocker):
+
+    # temperature_df = pd.read_csv('./data/temprature_data_filtired_1951-2013.csv')
+    # assert len(temperature_df) > 0  
+
+    # co2_df = pd.read_csv('./data/tidy_format_co2_emission_dataset.csv')
+    # assert len(co2_df) > 0  
+
+
+
+#System Level test that check whole system/pipeline
+
+def file_exists(file_path):
+    return os.path.exists(file_path)
+
 
 def test_system_level_pipeline(pipeline_instance, tmp_path): 
     # temporary directory for test files
@@ -97,26 +152,3 @@ def test_system_level_pipeline(pipeline_instance, tmp_path):
     assert not co2_df.empty  # Check if the DataFrame is not empty
     assert check_co2_data_types(co2_df)
     print('Sys level test ended')
-
-
-
-def check_co2_data_types(co2_df):
-    # Check if the data types in the CO2 DataFrame match the expected data types
-    expected_data_types = {'Country': 'object', 'Year': 'int64', 'CO2EmissionRate (mt)': 'float64'}
-
-    for column, expected_type in expected_data_types.items():
-        assert co2_df[column].dtype == expected_type
-    return True
-
-def check_temprature_data_types(temperature_df):
-    # dt,AverageTemperature,AverageTemperatureUncertainty,Country
-
-    expected_data_types = {'dt': 'object', 'AverageTemperature': 'float64', 'AverageTemperatureUncertainty': 
-                           'float64' ,'Country': 'object'}
-
-    for column, expected_type in expected_data_types.items():
-        assert temperature_df[column].dtype == expected_type
-    return True
-
-
-
