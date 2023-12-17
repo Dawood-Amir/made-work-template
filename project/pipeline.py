@@ -50,7 +50,7 @@ class Pipeline:
         #Clean the data here 
 
         # Convert 'CO2EmissionRate (mt)' column to float type Conversion bcs of failing the test!
-        df['CO2EmissionRate (mt)'] = pd.to_numeric(df['CO2EmissionRate (mt)'], errors='coerce').astype(float)
+        df['CO2EmissionRate (mt)'] = pd.topip_numeric(df['CO2EmissionRate (mt)'], errors='coerce').astype(float)
 
 
         df.dropna(subset=['Country','Year','CO2EmissionRate (mt)'], inplace=True)

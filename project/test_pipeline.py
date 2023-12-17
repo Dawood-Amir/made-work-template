@@ -35,7 +35,7 @@ def test_download_and_filter_data_with_mock(pipeline_instance, tmp_path):
 
     # Creating a mock CsvDownloader
     mock_downloader = Mock()
-    mock_downloader.download_data.return_value = create_mocked_dataframe()
+    mock_downloader.download_data.return_value =  create_mocked_dataframe()
     
     mock_downloader.save_file_with_modification.return_value = "File saved successfully"
 
@@ -63,6 +63,14 @@ def create_mocked_dataframe():# Create a mocked DataFrame for testing
 
     return pd.DataFrame(data)
 
+# def create_mocked_dataframe_for_2nd_dataset():
+#     data = {
+#         'Country': ['Afghanistan', 'Albania'],
+#         'Year': [2021, 2021],
+#         'CO2EmissionRate (mt)': [8.35, 4.59]
+#     }
+
+#     return pd.DataFrame(data)
 
 # System Level test that check whole system/pipeline
 
@@ -109,3 +117,6 @@ def check_temprature_data_types(temperature_df):
     for column, expected_type in expected_data_types.items():
         assert temperature_df[column].dtype == expected_type
     return True
+
+
+
