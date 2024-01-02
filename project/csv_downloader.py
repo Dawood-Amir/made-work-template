@@ -1,6 +1,7 @@
 import pandas as pd 
-
+import os
 class CsvDownloader:
+
         def __init__(self):
                 self.data_url = None
                 self.df = None
@@ -17,10 +18,22 @@ class CsvDownloader:
                         self.df.to_csv(fileNameWithPath,index=False)
                         print('File saved'+fileNameWithPath)
 
-        def save_file_with_modification(self, fileNameWithPath , dataframe)  :
-                if(dataframe is not None ):
-                        dataframe.to_csv(fileNameWithPath,index=False)
-                        return 'File saved'+fileNameWithPath
+
+        def save_file_with_modification(self, filename , dataframe)  :
+                file_path = os.path.abspath(os.path.join('./data', filename))
+                directory = os.path.dirname(file_path)
+
+                # Check if the directory exists
+                if not os.path.exists(directory):
+                        print("directory does not exist", directory)
+                
+
+                if dataframe is not None:
+                        dataframe.to_csv(file_path, index=False)
+                        print('File saved ' + file_path)
+                        return file_path
+                else:
+                        return 'Dataframe is None, file not saved.'
 
 
 

@@ -7,6 +7,8 @@ def filterDataWithDateRange(df,startingDate, endingDate):
 
 #Print if theres any month is missing in an year in the dataset 
 def printMissingMonthsData(df):
+    print("Working on missing data...")
+
     monthCount  = 1
     lastyear = 1949
     currentyear = 0
@@ -33,19 +35,19 @@ def printMissingMonthsData(df):
             
             lastyear = pd.to_datetime(row['dt']).year
 
-    print("Printing the missing data...............")
-    print(df2)
+    #print("Printing the missing data...............")
+    #print(df2)
     df2= None
     
 
 #Print The Min Max data according the countries and date
 def printMinMaxData(df):
-    
+    print("Working on MinMax data...")
     # Find the minimum and maximum dates for each country
     min_max_dates = df.groupby('Country')['dt'].agg(['min', 'max']).reset_index()
-    print("Min & Max date of all countries ")
-    print(min_max_dates)
-    print("\n")
+    # print("Min & Max date of all countries ")
+    # print(min_max_dates)
+    # print("\n")
     # Identify the common date range here
     common_start_date = min_max_dates['min'].max()
     common_end_date = min_max_dates['max'].min()
@@ -58,8 +60,8 @@ def printMinMaxData(df):
     common_end_date = min_max_dates['max'].min()
 
     df =None
-    print("Common start date in all Countries " + str(common_start_date) +"\n")
-    print("Common End date in all Countries "+str(common_end_date))
+    #print("Common start date in all Countries " + str(common_start_date) +"\n")
+    #print("Common End date in all Countries "+str(common_end_date))
 
 
 
