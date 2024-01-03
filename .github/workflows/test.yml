@@ -28,8 +28,11 @@ jobs:
         echo "KAGGLE_USERNAME=${{ secrets.KAGGLE_USERNAME }}" >> $GITHUB_ENV
         echo "KAGGLE_KEY=${{ secrets.KAGGLE_KEY }}" >> $GITHUB_ENV
       
+    - name: Install pytest
+      run: |
+        pip install pytest
+    
     - name: Run tests
       run: |
         chmod +x project/tests.sh
         project/tests.sh
-        
