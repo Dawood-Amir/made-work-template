@@ -17,7 +17,10 @@ class CsvDownloader:
                         # If in GitHub Actions, use GitHub Secrets
                         kaggle_username = os.environ['KAGGLE_USERNAME']
                         kaggle_key = os.environ['KAGGLE_KEY']
-                        kaggle_api.authenticate(username=kaggle_username, key=kaggle_key)
+                        if kaggle_username and kaggle_key:
+                                kaggle_api.authenticate()
+                        else:
+                                raise ValueError("KAGGLE_USERNAME or KAGGLE_KEY not set in GitHub Secrets.")
 
                 else:
                         kaggle_api.authenticate()
