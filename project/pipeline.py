@@ -11,7 +11,7 @@ from sklearn.impute import KNNImputer
 class Pipeline: 
     def __init__(self):
         self._csv_dowloader = CsvDownloader()
-        
+        self.kaggle_api = self._csv_dowloader.authenticate_kaggle()
 
     def get_csv_downloader(self):
         return self._csv_dowloader
@@ -19,6 +19,10 @@ class Pipeline:
 
     def downloadData(self , url ): #return df
         return self._csv_dowloader.download_data(url)
+
+
+    def downloadCo2Data(self): #return df
+        return self._csv_dowloader.download_co2_data(self.kaggle_api)
 
     def dowloadAndFilterData(self,df):
         print("Working on 1st dataset ...")
@@ -62,7 +66,8 @@ class Pipeline:
         #Clean the data here 
         print("Working on 2nd dataset ...")
         # Convert 'CO2EmissionRate (mt)' column to float type Conversion bcs of failing the test!
-        df['CO2EmissionRate (mt)'] = pd.to_numeric(df['CO2EmissionRate (mt)'], errors='coerce').astype(float)
+        if df['CO2EmissionRate (mt)'] is not None:
+            df['CO2EmissionRate (mt)'] = pd.to_numeric(df['CO2EmissionRate (mt)'], errors='coerce').astype(float)
 
     
         df.dropna(subset=['Country','Year','CO2EmissionRate (mt)'], inplace=True)
@@ -78,6 +83,7 @@ class Pipeline:
     
 
     def mergeDf(self):
+        print("Merging Both Datasets....")
         temperature_df = pd.read_csv('./data/temprature_data_filtired_1951-2013.csv')
         co2_df = pd.read_csv('./data/tidy_format_co2_emission_dataset.csv')
 
@@ -202,7 +208,7 @@ class Pipeline:
     def main(self):
         df = self.downloadData(const.urls[0])
         self.dowloadAndFilterData(df)
-        df2 = self.downloadData(const.urls[1])
+        df2 = self.downloadCo2Data()
         self.downloadAndFilter2ndData(df2)
         merged_df = self.mergeDf()
 

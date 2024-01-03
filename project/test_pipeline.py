@@ -14,10 +14,23 @@ def test_download_mocked_files(pipeline_instance, mocker):
     # Mock the download method to avoid actual file download
     mocker.patch.object(pipeline_instance, 'downloadData', return_value='test_mocked.csv')
 
-    data_files_path = [pipeline_instance.downloadData(url) for url in urls]
+    data_files_path = pipeline_instance.downloadData(urls[0]) 
 
     # Check that the mocked file is returned for each URL
-    assert data_files_path == ['test_mocked.csv'] * len(urls)
+    assert data_files_path == ['test_mocked.csv'] 
+
+    return data_files_path  # Return the value to be used in the test
+
+
+@pytest.fixture
+def test_download_co2_mocked_files(pipeline_instance, mocker):
+    # Mock the download method to avoid actual file download
+    mocker.patch.object(pipeline_instance, 'downloadCo2Data', return_value='test_mocked.csv')
+
+    data_files_path = [pipeline_instance.downloadCo2Data() ]
+
+    # Check that the mocked file is returned for each URL
+    assert data_files_path == ['test_mocked_co2.csv'] 
 
     return data_files_path  # Return the value to be used in the test
 
@@ -63,8 +76,8 @@ def check_temprature_data_types(temperature_df):
         print("DataFrame is empty")
         return False
 
-    expected_data_types = {'dt': 'object', 'AverageTemperature': 'float64', 'AverageTemperatureUncertainty': 
-                           'float64' ,'Country': 'object'}
+    expected_data_types = {'Country': 'object', 'Year': 'int64', 'AverageTemperature': 
+                           'float64'}
 
     for column, expected_type in expected_data_types.items():
         assert temperature_df[column].dtype == expected_type
