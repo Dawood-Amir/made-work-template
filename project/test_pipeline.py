@@ -1,7 +1,6 @@
 import pytest
 from pipeline import Pipeline
 import pandas as pd
-from unittest.mock import Mock
 from Constants import urls
 import os
 
