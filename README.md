@@ -47,9 +47,8 @@ Before checking the report, ensure that the pipeline has been run at least once.
 
 ```
  project/report.ipynb
- link
- https://github.com/Dawood-Amir/made-work-template/blob/main/project/report.ipynb
 ```
+**link:** [https://github.com/Dawood-Amir/made-work-template/blob/main/project/report.ipynb]
 
 ## Issues
 
